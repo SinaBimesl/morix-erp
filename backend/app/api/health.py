@@ -1,11 +1,8 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
 
-from app.core.db import get_session
+from app.core.db import SessionDep
 
 router = APIRouter(prefix="/health", tags=["health"])
 
@@ -17,7 +14,7 @@ def health() -> dict[str, str]:
 
 
 @router.get("/db")
-def health_db(session: Annotated[Session, Depends(get_session)]) -> dict[str, str]:
+def health_db(session: SessionDep) -> dict[str, str]:
     """Readiness: the database is reachable."""
     try:
         session.execute(text("SELECT 1"))

@@ -18,7 +18,7 @@ WORKDIR /app
 
 # Install dependencies first so this layer is cached until the lockfile changes.
 COPY pyproject.toml uv.lock .python-version ./
-RUN uv sync --frozen --no-dev
+RUN uv sync --locked --no-dev
 
 COPY alembic.ini ./
 COPY migrations ./migrations
@@ -34,7 +34,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 FROM base AS test
 
-RUN uv sync --frozen
+RUN uv sync --locked
 COPY tests ./tests
 USER app
 CMD ["pytest", "-p", "no:cacheprovider"]

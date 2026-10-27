@@ -1,6 +1,8 @@
 from collections.abc import Iterator
 from functools import lru_cache
+from typing import Annotated
 
+from fastapi import Depends
 from sqlalchemy import Engine, MetaData, create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
@@ -32,9 +34,15 @@ def get_sessionmaker() -> sessionmaker[Session]:
 
 
 def get_session() -> Iterator[Session]:
-    """FastAPI dependency: one session and one transaction per request.
+    """One session and one transaction per request.
 
     Commits when the request handler succeeds, rolls back on any exception.
+    Use it through `SessionDep` so this finishes before the response is sent.
     """
     with get_sessionmaker()() as session, session.begin():
         yield session
+
+
+# Function scope ends the transaction before the response is sent, so a failed
+# commit becomes an error response instead of a success for unsaved data.
+SessionDep = Annotated[Session, Depends(get_session, scope="function")]
