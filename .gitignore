@@ -23,3 +23,7 @@ htmlcov/
 .idea/
 .vscode/
 .DS_Store
+
+
+.gitignore
+CLAUDE.md
