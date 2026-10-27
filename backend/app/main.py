@@ -5,8 +5,8 @@ from app.api import health
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="MERP",
-        summary="Guitar workshop management system API",
+        title="MorixERP",
+        summary="Morix Guitar workshop management system API",
         version="0.1.0",
     )
     app.include_router(health.router)

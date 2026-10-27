@@ -7,7 +7,7 @@ def test_create_app_returns_configured_app() -> None:
     app = create_app()
 
     assert isinstance(app, FastAPI)
-    assert app.title == "MERP"
+    assert app.title == "MorixERP"
     assert app.version == "0.1.0"
 
 
