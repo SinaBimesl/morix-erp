@@ -25,7 +25,12 @@ class Base(DeclarativeBase):
 @lru_cache
 def get_engine() -> Engine:
     # Created on first use; creating an engine does not open a connection.
-    return create_engine(get_settings().database_url, pool_pre_ping=True)
+    settings = get_settings()
+    return create_engine(
+        settings.database_url,
+        pool_pre_ping=True,
+        connect_args=settings.app_connect_args,
+    )
 
 
 @lru_cache

@@ -10,7 +10,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      # Run a real query over TCP as the app user. TCP matters: during first-run
+      # initialisation Postgres listens on its Unix socket only, then restarts.
+      test:
+        - CMD-SHELL
+        - >-
+          PGPASSWORD="$$POSTGRES_PASSWORD" psql -h 127.0.0.1 -U "$$POSTGRES_USER"
+          -d "$$POSTGRES_DB" -c "SELECT 1"
       interval: 5s
       timeout: 5s
       retries: 10
@@ -32,6 +38,23 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+
+  # One-shot schema migration. Never started by "up"; run it explicitly:
+  #   docker compose --profile migrate run --rm --build migrate
+  migrate:
+    build:
+      context: ./backend
+      target: runtime
+    env_file: .env
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    profiles: ["migrate"]
 
   tests:
     build:
