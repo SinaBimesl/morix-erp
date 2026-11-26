@@ -8,7 +8,7 @@ def test_create_app_returns_configured_app() -> None:
 
     assert isinstance(app, FastAPI)
     assert app.title == "MorixERP"
-    assert app.version == "0.1.0"
+    assert app.version == "0.6.0"
 
 
 def test_create_app_returns_independent_instances() -> None:
