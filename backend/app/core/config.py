@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     # queueing behind long transactions and blocking all traffic; 0 disables it.
     migration_lock_timeout_ms: NonNegativeInt = 5_000
 
+    # Login sessions expire this long after login, regardless of activity.
+    auth_session_hours: PositiveInt = 12
+    # Consecutive failed logins before the account is temporarily locked.
+    auth_max_failed_logins: PositiveInt = 5
+    auth_lockout_minutes: PositiveInt = 15
+
     @property
     def database_url(self) -> URL:
         # URL.create escapes special characters in credentials.

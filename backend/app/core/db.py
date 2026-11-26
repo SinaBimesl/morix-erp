@@ -1,10 +1,12 @@
 from collections.abc import Iterator
+from datetime import UTC, datetime
 from functools import lru_cache
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import Depends
-from sqlalchemy import Engine, MetaData, create_engine
+from sqlalchemy import DateTime, Dialect, Engine, MetaData, create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.types import TypeDecorator
 
 from app.core.config import get_settings
 
@@ -18,8 +20,36 @@ NAMING_CONVENTION = {
 }
 
 
+def utcnow() -> datetime:
+    return datetime.now(UTC)
+
+
+class UTCDateTime(TypeDecorator[datetime]):
+    """Timezone-aware timestamp, stored and returned in UTC.
+
+    Rejects naive datetimes on write, and attaches UTC on read for databases
+    that drop the offset (SQLite in tests).
+    """
+
+    impl = DateTime(timezone=True)
+    cache_ok = True
+
+    def process_bind_param(self, value: datetime | None, dialect: Dialect) -> Any:
+        if value is not None:
+            if value.tzinfo is None:
+                raise ValueError("naive datetime; use a timezone-aware value")
+            value = value.astimezone(UTC)
+        return value
+
+    def process_result_value(self, value: Any, dialect: Dialect) -> datetime | None:
+        if value is not None and value.tzinfo is None:
+            value = value.replace(tzinfo=UTC)
+        return value
+
+
 class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
+    type_annotation_map = {datetime: UTCDateTime}
 
 
 @lru_cache
