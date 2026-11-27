@@ -49,8 +49,13 @@ def create_role(body: RoleCreate, auth: Manager, request: Request, session: Sess
     session.add(role)
     flush_or_conflict(session, "role code already exists")
     audit.record(
-        session, "role.created", actor_id=auth.user.id, entity_type="role", entity_id=role.id,
-        ip_address=client_ip(request), details={"code": role.code, "permissions": role.permissions},
+        session,
+        "role.created",
+        actor_id=auth.user.id,
+        entity_type="role",
+        entity_id=role.id,
+        ip_address=client_ip(request),
+        details={"code": role.code, "permissions": role.permissions},
     )
     return RoleRead.model_validate(role)
 
@@ -79,8 +84,13 @@ def update_role(
             setattr(role, field, data[field])
     flush_or_conflict(session, "role update conflicts with existing data")
     audit.record(
-        session, "role.updated", actor_id=auth.user.id, entity_type="role", entity_id=role.id,
-        ip_address=client_ip(request), details={"changes": data},
+        session,
+        "role.updated",
+        actor_id=auth.user.id,
+        entity_type="role",
+        entity_id=role.id,
+        ip_address=client_ip(request),
+        details={"changes": data},
     )
     return RoleRead.model_validate(role)
 
@@ -91,7 +101,12 @@ def delete_role(role_id: uuid.UUID, auth: Manager, request: Request, session: Se
     role = get_or_404(session, Role, role_id, "role")
     ensure_can_grant(auth.user, auth.permissions, role.permissions)
     audit.record(
-        session, "role.deleted", actor_id=auth.user.id, entity_type="role", entity_id=role.id,
-        ip_address=client_ip(request), details={"code": role.code, "permissions": role.permissions},
+        session,
+        "role.deleted",
+        actor_id=auth.user.id,
+        entity_type="role",
+        entity_id=role.id,
+        ip_address=client_ip(request),
+        details={"code": role.code, "permissions": role.permissions},
     )
     session.delete(role)

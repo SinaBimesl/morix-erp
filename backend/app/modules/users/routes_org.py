@@ -40,7 +40,9 @@ def _unprocessable(detail: str) -> HTTPException:
 # --- departments ----------------------------------------------------------
 
 
-def _check_parent(session: SessionDep, department: Department | None, parent_id: uuid.UUID | None) -> None:
+def _check_parent(
+    session: SessionDep, department: Department | None, parent_id: uuid.UUID | None
+) -> None:
     """Parent must exist and must not be the department itself or a descendant."""
     seen: set[uuid.UUID] = set()
     current = parent_id
@@ -77,20 +79,30 @@ def create_department(
     session.add(department)
     flush_or_conflict(session, "department code already exists")
     audit.record(
-        session, "department.created", actor_id=auth.user.id, entity_type="department",
-        entity_id=department.id, ip_address=client_ip(request), details={"code": department.code},
+        session,
+        "department.created",
+        actor_id=auth.user.id,
+        entity_type="department",
+        entity_id=department.id,
+        ip_address=client_ip(request),
+        details={"code": department.code},
     )
     return DepartmentRead.model_validate(department)
 
 
 @router.get("/departments/{department_id}")
 def get_department(department_id: uuid.UUID, auth: Reader, session: SessionDep) -> DepartmentRead:
-    return DepartmentRead.model_validate(get_or_404(session, Department, department_id, "department"))
+    return DepartmentRead.model_validate(
+        get_or_404(session, Department, department_id, "department")
+    )
 
 
 @router.patch("/departments/{department_id}")
 def update_department(
-    department_id: uuid.UUID, body: DepartmentUpdate, auth: Manager, request: Request,
+    department_id: uuid.UUID,
+    body: DepartmentUpdate,
+    auth: Manager,
+    request: Request,
     session: SessionDep,
 ) -> DepartmentRead:
     department = get_or_404(session, Department, department_id, "department")
@@ -100,8 +112,13 @@ def update_department(
     for field, value in data.items():
         setattr(department, field, value)
     audit.record(
-        session, "department.updated", actor_id=auth.user.id, entity_type="department",
-        entity_id=department.id, ip_address=client_ip(request), details={"fields": sorted(data)},
+        session,
+        "department.updated",
+        actor_id=auth.user.id,
+        entity_type="department",
+        entity_id=department.id,
+        ip_address=client_ip(request),
+        details={"fields": sorted(data)},
     )
     return DepartmentRead.model_validate(department)
 
@@ -120,8 +137,13 @@ def delete_department(
         if session.scalar(select(exists().where(column == department.id))):
             raise conflict(f"department still has {what}; deactivate it instead")
     audit.record(
-        session, "department.deleted", actor_id=auth.user.id, entity_type="department",
-        entity_id=department.id, ip_address=client_ip(request), details={"code": department.code},
+        session,
+        "department.deleted",
+        actor_id=auth.user.id,
+        entity_type="department",
+        entity_id=department.id,
+        ip_address=client_ip(request),
+        details={"code": department.code},
     )
     session.delete(department)
 
@@ -134,7 +156,9 @@ def _check_team_department(session: SessionDep, department_id: uuid.UUID) -> Non
         raise _unprocessable("unknown department_id")
 
 
-def _check_team_name(session: SessionDep, team: Team | None, department_id: uuid.UUID, name: str) -> None:
+def _check_team_name(
+    session: SessionDep, team: Team | None, department_id: uuid.UUID, name: str
+) -> None:
     if session.scalar(
         select(Team.id).where(
             Team.department_id == department_id,
@@ -157,7 +181,9 @@ def list_teams(
     if department_id is not None:
         stmt = stmt.where(Team.department_id == department_id)
     if user_id is not None:
-        stmt = stmt.where(Team.id.in_(select(TeamMember.team_id).where(TeamMember.user_id == user_id)))
+        stmt = stmt.where(
+            Team.id.in_(select(TeamMember.team_id).where(TeamMember.user_id == user_id))
+        )
     if not include_inactive:
         stmt = stmt.where(Team.is_active)
     return [TeamRead.model_validate(t) for t in session.scalars(stmt)]
@@ -171,8 +197,13 @@ def create_team(body: TeamCreate, auth: Manager, request: Request, session: Sess
     session.add(team)
     flush_or_conflict(session, "a team with this name already exists in the department")
     audit.record(
-        session, "team.created", actor_id=auth.user.id, entity_type="team", entity_id=team.id,
-        ip_address=client_ip(request), details={"name": team.name},
+        session,
+        "team.created",
+        actor_id=auth.user.id,
+        entity_type="team",
+        entity_id=team.id,
+        ip_address=client_ip(request),
+        details={"name": team.name},
     )
     return TeamRead.model_validate(team)
 
@@ -192,14 +223,22 @@ def update_team(
         _check_team_department(session, data["department_id"])
     if "department_id" in data or "name" in data:
         _check_team_name(
-            session, team, data.get("department_id", team.department_id), data.get("name", team.name)
+            session,
+            team,
+            data.get("department_id", team.department_id),
+            data.get("name", team.name),
         )
     for field, value in data.items():
         setattr(team, field, value)
     flush_or_conflict(session, "a team with this name already exists in the department")
     audit.record(
-        session, "team.updated", actor_id=auth.user.id, entity_type="team", entity_id=team.id,
-        ip_address=client_ip(request), details={"fields": sorted(data)},
+        session,
+        "team.updated",
+        actor_id=auth.user.id,
+        entity_type="team",
+        entity_id=team.id,
+        ip_address=client_ip(request),
+        details={"fields": sorted(data)},
     )
     return TeamRead.model_validate(team)
 
@@ -208,16 +247,25 @@ def update_team(
 def delete_team(team_id: uuid.UUID, auth: Manager, request: Request, session: SessionDep) -> None:
     team = get_or_404(session, Team, team_id, "team")
     audit.record(
-        session, "team.deleted", actor_id=auth.user.id, entity_type="team", entity_id=team.id,
-        ip_address=client_ip(request), details={"name": team.name},
+        session,
+        "team.deleted",
+        actor_id=auth.user.id,
+        entity_type="team",
+        entity_id=team.id,
+        ip_address=client_ip(request),
+        details={"name": team.name},
     )
     session.delete(team)
 
 
 @router.put("/teams/{team_id}/members/{user_id}")
 def set_team_member(
-    team_id: uuid.UUID, user_id: uuid.UUID, body: TeamMemberSet, auth: Manager,
-    request: Request, session: SessionDep,
+    team_id: uuid.UUID,
+    user_id: uuid.UUID,
+    body: TeamMemberSet,
+    auth: Manager,
+    request: Request,
+    session: SessionDep,
 ) -> TeamRead:
     """Add a user to the team, or update their lead flag."""
     team = get_or_404(session, Team, team_id, "team")
@@ -230,8 +278,13 @@ def set_team_member(
         member.is_lead = body.is_lead
     flush_or_conflict(session, "membership changed concurrently; retry")
     audit.record(
-        session, "team.member_set", actor_id=auth.user.id, entity_type="team", entity_id=team.id,
-        ip_address=client_ip(request), details={"user_id": str(user_id), "is_lead": body.is_lead},
+        session,
+        "team.member_set",
+        actor_id=auth.user.id,
+        entity_type="team",
+        entity_id=team.id,
+        ip_address=client_ip(request),
+        details={"user_id": str(user_id), "is_lead": body.is_lead},
     )
     return TeamRead.model_validate(team)
 
@@ -246,7 +299,12 @@ def remove_team_member(
         raise not_found("team member")
     team.members.remove(member)
     audit.record(
-        session, "team.member_removed", actor_id=auth.user.id, entity_type="team",
-        entity_id=team.id, ip_address=client_ip(request), details={"user_id": str(user_id)},
+        session,
+        "team.member_removed",
+        actor_id=auth.user.id,
+        entity_type="team",
+        entity_id=team.id,
+        ip_address=client_ip(request),
+        details={"user_id": str(user_id)},
     )
     return TeamRead.model_validate(team)

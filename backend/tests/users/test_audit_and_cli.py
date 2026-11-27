@@ -42,7 +42,9 @@ def test_audit_filters_need_timezone_and_permission(
 
 
 def test_cli_creates_superuser(
-    sm: sessionmaker[Session], client: TestClient, monkeypatch: pytest.MonkeyPatch,
+    sm: sessionmaker[Session],
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     monkeypatch.setattr("sys.stdin", io.StringIO(PASSWORD + "\n"))
@@ -64,8 +66,12 @@ def test_cli_creates_superuser(
     ],
 )
 def test_cli_rejects_invalid_input(
-    sm: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str], username: str, password: str, error: str,
+    sm: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    username: str,
+    password: str,
+    error: str,
 ) -> None:
     monkeypatch.setattr("sys.stdin", io.StringIO(password + "\n"))
 
@@ -74,7 +80,9 @@ def test_cli_rejects_invalid_input(
 
 
 def test_cli_refuses_duplicate(
-    sm: sessionmaker[Session], make_user: MakeUser, monkeypatch: pytest.MonkeyPatch,
+    sm: sessionmaker[Session],
+    make_user: MakeUser,
+    monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     make_user("owner")
@@ -85,7 +93,9 @@ def test_cli_refuses_duplicate(
 
 
 def test_cli_prunes_old_sessions(
-    sm: sessionmaker[Session], make_user: MakeUser, login: Login,
+    sm: sessionmaker[Session],
+    make_user: MakeUser,
+    login: Login,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     old, current, recent_logout = (login(make_user()) for _ in range(3))

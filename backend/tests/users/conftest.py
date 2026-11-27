@@ -40,7 +40,9 @@ def sm(monkeypatch: pytest.MonkeyPatch) -> Iterator[sessionmaker[Session]]:
     factory = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
     monkeypatch.setattr(db, "get_sessionmaker", lambda: factory)
     # Cheap Argon2 parameters; production cost would make the suite slow.
-    monkeypatch.setattr(security, "hasher", PasswordHasher(time_cost=1, memory_cost=8, parallelism=1))
+    monkeypatch.setattr(
+        security, "hasher", PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
+    )
     yield factory
     engine.dispose()
 

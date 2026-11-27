@@ -182,6 +182,9 @@ Permissions: `users.read`, `users.manage`, `users.assign_roles`, `roles.read`,
   docker compose run --rm --user "$(id -u):$(id -g)" -v ./backend/migrations:/app/migrations \
     backend alembic revision --autogenerate -m "describe change"
   ```
+- Generated revisions (`migrations/versions/`) are linted for real errors only
+  (E/F/B; no line-length, UP or import-order rules) and are not formatted, so
+  Alembic's template output passes as generated. Fix any finding before committing.
 - Migrations must not import app code. `env.py` renders `UTCDateTime` as
   `sa.DateTime(timezone=True)`; check generated files for other app types.
 - Online migrations use a lock timeout and no statement timeout. The whole
@@ -202,7 +205,12 @@ Permissions: `users.read`, `users.manage`, `users.assign_roles`, `roles.read`,
 cd backend && uv run pytest                          # local
 docker compose --profile test run --rm --build tests # in Docker
 cd backend && uv lock --check                        # lockfile matches pyproject
+cd backend && uv run ruff check . && uv run ruff format --check .  # lint, format
 ```
+
+Ruff is a dev dependency and is configured in `backend/pyproject.toml`: line
+length 100, rules E, F, UP, B, I. Run `uv run ruff format .` and
+`uv run ruff check --fix .` before finishing a change.
 
 Tests need no external database: they set their own environment in
 `tests/conftest.py`, use SQLite or mocks for sessions, and use a silent local

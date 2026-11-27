@@ -108,9 +108,7 @@ def ensure_can_manage_user(
 def ensure_other_active_superuser(session: Session, user: User) -> None:
     """Refuse a change that would leave no active superuser."""
     others = session.scalar(
-        select(
-            exists().where(User.is_superuser, User.is_active, User.id != user.id)
-        )
+        select(exists().where(User.is_superuser, User.is_active, User.id != user.id))
     )
     if not others:
         raise conflict("this is the last active superuser")
@@ -124,9 +122,7 @@ def load_roles(session: Session, role_ids: Iterable[uuid.UUID]) -> list[Role]:
     return roles
 
 
-def revoke_sessions(
-    session: Session, user_id: uuid.UUID, keep: uuid.UUID | None = None
-) -> None:
+def revoke_sessions(session: Session, user_id: uuid.UUID, keep: uuid.UUID | None = None) -> None:
     stmt = (
         update(AuthSession)
         .where(AuthSession.user_id == user_id, AuthSession.revoked_at.is_(None))

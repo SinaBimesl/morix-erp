@@ -46,7 +46,9 @@ def _check_department(session: SessionDep, department_id: uuid.UUID | None) -> N
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "unknown department_id")
 
 
-def _check_unique(session: SessionDep, user: User | None, username: str | None, email: str | None) -> None:
+def _check_unique(
+    session: SessionDep, user: User | None, username: str | None, email: str | None
+) -> None:
     exclude = user.id if user else None
     if username and session.scalar(
         select(User.id).where(User.username == username, User.id != exclude)
@@ -61,7 +63,9 @@ def list_users(
     auth: Reader,
     session: SessionDep,
     page: Annotated[PageParams, Depends(page_params)],
-    q: Annotated[str | None, Query(max_length=100, description="Search name, username, email")] = None,
+    q: Annotated[
+        str | None, Query(max_length=100, description="Search name, username, email")
+    ] = None,
     is_active: bool | None = None,
     department_id: uuid.UUID | None = None,
     role_id: uuid.UUID | None = None,
@@ -70,7 +74,11 @@ def list_users(
     if q:
         pattern = f"%{q.strip()}%"
         stmt = stmt.where(
-            or_(User.username.ilike(pattern), User.full_name.ilike(pattern), User.email.ilike(pattern))
+            or_(
+                User.username.ilike(pattern),
+                User.full_name.ilike(pattern),
+                User.email.ilike(pattern),
+            )
         )
     if is_active is not None:
         stmt = stmt.where(User.is_active == is_active)
@@ -107,10 +115,17 @@ def create_user(body: UserCreate, auth: Manager, request: Request, session: Sess
     session.add(user)
     flush_or_conflict(session, "username or email already exists")
     audit.record(
-        session, "user.created", actor_id=auth.user.id, entity_type="user", entity_id=user.id,
+        session,
+        "user.created",
+        actor_id=auth.user.id,
+        entity_type="user",
+        entity_id=user.id,
         ip_address=client_ip(request),
-        details={"username": user.username, "is_superuser": user.is_superuser,
-                 "roles": [r.code for r in roles]},
+        details={
+            "username": user.username,
+            "is_superuser": user.is_superuser,
+            "roles": [r.code for r in roles],
+        },
     )
     return UserRead.model_validate(user)
 
@@ -147,8 +162,13 @@ def update_user(
         setattr(user, field, value)
     flush_or_conflict(session, "email already exists")
     audit.record(
-        session, "user.updated", actor_id=auth.user.id, entity_type="user", entity_id=user.id,
-        ip_address=client_ip(request), details={"fields": sorted(data)},
+        session,
+        "user.updated",
+        actor_id=auth.user.id,
+        entity_type="user",
+        entity_id=user.id,
+        ip_address=client_ip(request),
+        details={"fields": sorted(data)},
     )
     return UserRead.model_validate(user)
 
@@ -169,19 +189,29 @@ def reset_password(
     user.locked_until = None
     revoke_sessions(session, user.id)
     audit.record(
-        session, "user.password_reset", actor_id=auth.user.id, entity_type="user",
-        entity_id=user.id, ip_address=client_ip(request),
+        session,
+        "user.password_reset",
+        actor_id=auth.user.id,
+        entity_type="user",
+        entity_id=user.id,
+        ip_address=client_ip(request),
     )
 
 
 @router.post("/{user_id}/unlock")
-def unlock_user(user_id: uuid.UUID, auth: Manager, request: Request, session: SessionDep) -> UserRead:
+def unlock_user(
+    user_id: uuid.UUID, auth: Manager, request: Request, session: SessionDep
+) -> UserRead:
     user = get_or_404(session, User, user_id, "user")
     ensure_can_manage_user(session, auth.user, auth.permissions, user)
     user.failed_login_count = 0
     user.locked_until = None
     audit.record(
-        session, "user.unlocked", actor_id=auth.user.id, entity_type="user", entity_id=user.id,
+        session,
+        "user.unlocked",
+        actor_id=auth.user.id,
+        entity_type="user",
+        entity_id=user.id,
         ip_address=client_ip(request),
     )
     return UserRead.model_validate(user)
@@ -189,7 +219,10 @@ def unlock_user(user_id: uuid.UUID, auth: Manager, request: Request, session: Se
 
 @router.put("/{user_id}/roles")
 def set_user_roles(
-    user_id: uuid.UUID, body: UserRolesUpdate, auth: RoleAssigner, request: Request,
+    user_id: uuid.UUID,
+    body: UserRolesUpdate,
+    auth: RoleAssigner,
+    request: Request,
     session: SessionDep,
 ) -> UserRead:
     """Replace the user's roles with exactly the given set."""
@@ -203,8 +236,12 @@ def set_user_roles(
 
     user.roles = sorted(new_roles, key=lambda r: r.code)
     audit.record(
-        session, "user.roles_changed", actor_id=auth.user.id, entity_type="user",
-        entity_id=user.id, ip_address=client_ip(request),
+        session,
+        "user.roles_changed",
+        actor_id=auth.user.id,
+        entity_type="user",
+        entity_id=user.id,
+        ip_address=client_ip(request),
         details={"roles": [r.code for r in user.roles]},
     )
     return UserRead.model_validate(user)

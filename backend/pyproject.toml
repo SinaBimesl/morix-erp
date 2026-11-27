@@ -18,6 +18,7 @@ dependencies = [
 dev = [
     "httpx>=0.28.1",
     "pytest>=9.1.1",
+    "ruff>=0.17.6",
 ]
 
 [tool.uv]
@@ -27,3 +28,18 @@ package = false
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "UP", "B", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+# Alembic writes revisions from its own template. Check them for real errors
+# (undefined names, unused imports) but not for style.
+"migrations/versions/*" = ["E501", "UP", "I"]
+
+[tool.ruff.format]
+exclude = ["migrations/versions/*"]

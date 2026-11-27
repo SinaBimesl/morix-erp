@@ -17,6 +17,7 @@ from app.modules.users.permissions import PERMISSIONS
 PASSWORD_MIN_LENGTH = 12
 PASSWORD_MAX_LENGTH = 128  # bounds hashing cost per request
 
+
 def _normalize(value: object) -> object:
     return value.strip().lower() if isinstance(value, str) else value
 

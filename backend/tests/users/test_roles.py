@@ -52,7 +52,9 @@ def test_deleting_role_removes_its_permissions(
 ) -> None:
     role = admin.client.post(ROLES, json={"code": "rr", "name": "R", "permissions": [USERS_READ]})
     account = login(make_user())
-    admin.client.put(f"/api/v1/users/{account.user.id}/roles", json={"role_ids": [role.json()["id"]]})
+    admin.client.put(
+        f"/api/v1/users/{account.user.id}/roles", json={"role_ids": [role.json()["id"]]}
+    )
     assert account.client.get("/api/v1/users").status_code == 200
 
     admin.client.delete(f"{ROLES}/{role.json()['id']}")

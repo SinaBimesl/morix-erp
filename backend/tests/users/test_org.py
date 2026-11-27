@@ -6,7 +6,9 @@ TEAMS = "/api/v1/teams"
 
 
 def _dept(admin: Account, code: str, parent_id: str | None = None) -> str:
-    response = admin.client.post(DEPTS, json={"code": code, "name": code.title(), "parent_id": parent_id})
+    response = admin.client.post(
+        DEPTS, json={"code": code, "name": code.title(), "parent_id": parent_id}
+    )
     assert response.status_code == 201, response.text
     return response.json()["id"]
 
@@ -69,7 +71,9 @@ def test_team_crud_and_members(admin: Account, make_user: MakeUser) -> None:
     team = _team(admin, dept)
     worker = make_user()
 
-    assert admin.client.post(TEAMS, json={"department_id": dept, "name": "Line A"}).status_code == 409
+    assert (
+        admin.client.post(TEAMS, json={"department_id": dept, "name": "Line A"}).status_code == 409
+    )
     assert _team(admin, other)  # same name, different department is fine
 
     added = admin.client.put(f"{TEAMS}/{team}/members/{worker.id}", json={"is_lead": False})

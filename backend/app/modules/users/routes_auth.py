@@ -41,9 +41,7 @@ INVALID_LOGIN = "Invalid username or password"
 
 
 def me_read(user: User, permissions: frozenset[str]) -> MeRead:
-    return MeRead(
-        **UserRead.model_validate(user).model_dump(), permissions=sorted(permissions)
-    )
+    return MeRead(**UserRead.model_validate(user).model_dump(), permissions=sorted(permissions))
 
 
 @router.post(
@@ -61,9 +59,7 @@ def login(
     now = utcnow()
     ip = client_ip(request)
     # Row lock so concurrent attempts count failures correctly (PostgreSQL).
-    user = session.scalar(
-        select(User).where(User.username == body.username).with_for_update()
-    )
+    user = session.scalar(select(User).where(User.username == body.username).with_for_update())
 
     def reject(reason: str) -> JSONResponse:
         # Returned, not raised, so the failed-attempt count and the audit event
@@ -95,7 +91,10 @@ def login(
             user.failed_login_count = 0
             user.locked_until = now + timedelta(minutes=settings.auth_lockout_minutes)
             audit.record(
-                session, "auth.account_locked", entity_type="user", entity_id=user.id,
+                session,
+                "auth.account_locked",
+                entity_type="user",
+                entity_id=user.id,
                 ip_address=ip,
             )
         return reject("bad_password")
@@ -119,7 +118,11 @@ def login(
     session.add(auth_session)
     session.flush()
     audit.record(
-        session, "auth.login", actor_id=user.id, entity_type="user", entity_id=user.id,
+        session,
+        "auth.login",
+        actor_id=user.id,
+        entity_type="user",
+        entity_id=user.id,
         ip_address=ip,
     )
     return LoginResponse(
@@ -133,8 +136,12 @@ def login(
 def logout(auth: CurrentAuth, request: Request, session: SessionDep) -> None:
     auth.auth_session.revoked_at = utcnow()
     audit.record(
-        session, "auth.logout", actor_id=auth.user.id, entity_type="user",
-        entity_id=auth.user.id, ip_address=client_ip(request),
+        session,
+        "auth.logout",
+        actor_id=auth.user.id,
+        entity_type="user",
+        entity_id=auth.user.id,
+        ip_address=client_ip(request),
     )
 
 
@@ -156,8 +163,13 @@ def update_me(
         setattr(user, field, value)
     flush_or_conflict(session, "email already exists")
     audit.record(
-        session, "user.profile_updated", actor_id=user.id, entity_type="user",
-        entity_id=user.id, ip_address=client_ip(request), details={"fields": sorted(data)},
+        session,
+        "user.profile_updated",
+        actor_id=user.id,
+        entity_type="user",
+        entity_id=user.id,
+        ip_address=client_ip(request),
+        details={"fields": sorted(data)},
     )
     return me_read(user, auth.permissions)
 
@@ -170,7 +182,9 @@ def change_password(
     if not verify_password(user.password_hash, body.current_password):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "current password is incorrect")
     if body.new_password == body.current_password:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "new password must differ from the current one")
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "new password must differ from the current one"
+        )
     if body.new_password.lower() == user.username:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "password must not equal the username")
     user.password_hash = hash_password(body.new_password)
@@ -179,6 +193,10 @@ def change_password(
     # Sign out everywhere else; this session stays valid.
     revoke_sessions(session, user.id, keep=auth.auth_session.id)
     audit.record(
-        session, "auth.password_changed", actor_id=user.id, entity_type="user",
-        entity_id=user.id, ip_address=client_ip(request),
+        session,
+        "auth.password_changed",
+        actor_id=user.id,
+        entity_type="user",
+        entity_id=user.id,
+        ip_address=client_ip(request),
     )

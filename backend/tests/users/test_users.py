@@ -32,8 +32,13 @@ def test_create_user(admin: Account, sm: sessionmaker[Session]) -> None:
 
     response = admin.client.post(
         USERS,
-        json={**NEW_USER, "email": "Pat@Example.COM", "department_id": str(department.id),
-              "job_title": "Finisher", "role_ids": [role_id]},
+        json={
+            **NEW_USER,
+            "email": "Pat@Example.COM",
+            "department_id": str(department.id),
+            "job_title": "Finisher",
+            "role_ids": [role_id],
+        },
     )
 
     assert response.status_code == 201, response.text
@@ -146,7 +151,9 @@ def test_only_superusers_manage_superusers(
     assert own.status_code == 403
 
 
-def test_reset_password(admin: Account, make_user: MakeUser, login: Login, client: TestClient) -> None:
+def test_reset_password(
+    admin: Account, make_user: MakeUser, login: Login, client: TestClient
+) -> None:
     account = login(make_user("worker"))
 
     response = admin.client.post(
@@ -184,9 +191,7 @@ def test_set_roles(admin: Account, make_user: MakeUser) -> None:
     assert cleared.json()["roles"] == []
 
 
-def test_role_assignment_cannot_escalate(
-    admin: Account, make_user: MakeUser, login: Login
-) -> None:
+def test_role_assignment_cannot_escalate(admin: Account, make_user: MakeUser, login: Login) -> None:
     powerful = _role(admin, "role-admin", [ROLES_MANAGE])
     harmless = _role(admin, "reader", [USERS_READ])
     assigner = login(make_user(permissions=(USERS_ASSIGN_ROLES, USERS_READ)))
@@ -220,9 +225,7 @@ def test_user_fields_round_trip(admin: Account, sm: sessionmaker[Session]) -> No
         assert user.created_at.tzinfo is not None
 
 
-def test_cannot_manage_user_with_more_permissions(
-    make_user: MakeUser, login: Login
-) -> None:
+def test_cannot_manage_user_with_more_permissions(make_user: MakeUser, login: Login) -> None:
     manager = login(make_user(permissions=(USERS_MANAGE, USERS_READ)))
     stronger = make_user(permissions=(USERS_READ, ROLES_MANAGE))
     peer = make_user(permissions=(USERS_READ,))
@@ -231,7 +234,9 @@ def test_cannot_manage_user_with_more_permissions(
     takeover = manager.client.post(f"{USERS}/{stronger.id}/reset-password", json=reset)
     assert takeover.status_code == 403
     assert ROLES_MANAGE in takeover.json()["detail"]
-    assert manager.client.patch(f"{USERS}/{stronger.id}", json={"is_active": False}).status_code == 403
+    assert (
+        manager.client.patch(f"{USERS}/{stronger.id}", json={"is_active": False}).status_code == 403
+    )
 
     assert manager.client.post(f"{USERS}/{peer.id}/reset-password", json=reset).status_code == 204
 

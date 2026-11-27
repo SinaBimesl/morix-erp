@@ -51,7 +51,10 @@ def create_superuser(username: str, full_name: str, password: str) -> User:
         session.add(user)
         session.flush()
         audit.record(
-            session, "user.created", entity_type="user", entity_id=user.id,
+            session,
+            "user.created",
+            entity_type="user",
+            entity_id=user.id,
             details={"username": username, "is_superuser": True, "via": "cli"},
         )
     return user

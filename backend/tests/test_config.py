@@ -97,9 +97,7 @@ def test_timeouts_read_environment(monkeypatch: pytest.MonkeyPatch) -> None:
         ("DB_STATEMENT_TIMEOUT_MS", "1000 -c search_path=evil"),
     ],
 )
-def test_invalid_timeouts_fail(
-    monkeypatch: pytest.MonkeyPatch, key: str, value: str
-) -> None:
+def test_invalid_timeouts_fail(monkeypatch: pytest.MonkeyPatch, key: str, value: str) -> None:
     monkeypatch.setenv(key, value)
 
     with pytest.raises(ValidationError):
