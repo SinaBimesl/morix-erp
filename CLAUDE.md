@@ -20,29 +20,32 @@ and README still say "MERP".
 
 ## Business documentation
 
-The business source is `morix-comp-1.pdf` (repo root): a one-page Persian
-Figma diagram of departments and their items. It has no processes or data
-fields. These documents extract it and expand it:
+The business source is `morix-erp.pdf` (repo root): a one-page Figma diagram,
+mostly in Persian, of the business areas and their items. It has no processes
+or data fields. It replaces `morix-comp-1.pdf`, which was the wrong file;
+do not use that file or anything derived from it.
 
-- `docs/BUSINESS_REQUIREMENTS.md`: full transcription of the PDF, departments,
-  products and services, requirements with stable IDs (`BR-*`), missing
-  information, and ambiguous terms.
-- `docs/WORKFLOWS.md`: maintenance checklists from the PDF, plus assumed
-  repair, manufacturing, supply, and communication workflows.
-- `docs/DOMAIN_MODEL.md`: Persian-English glossary, the concepts the PDF
-  shows, the proposed entities, and suggested module boundaries.
+These documents transcribe the PDF:
+
+- `docs/BUSINESS_REQUIREMENTS.md`: full transcription, areas, products and
+  services, scope requirements with stable IDs (`BR-*`), open questions, and
+  ambiguous terms.
+- `docs/WORKFLOWS.md`: the process elements the PDF shows, such as maintenance
+  tasks, repair services, and warranty coverage, with questions per area. No
+  workflows are assumed.
+- `docs/DOMAIN_MODEL.md`: Persian-English glossary, and the concepts and
+  relationships the PDF shows. No entities or modules are proposed.
 
 Rules:
 
-- Every statement is labelled **[PDF]**, **[Interpretation]**,
-  **[Assumption]**, or **[Recommendation]**. Only **[PDF]** is source fact.
-  Never present the others as business facts. Confirm them with the user before
-  building on them.
-- The proposed modules and entities are not approved. Approval rules above
-  still apply.
+- Statements are labelled **[PDF]** (source fact) or **[Interpretation]**
+  (minimum reading of the diagram). The documents hold no assumptions.
+- Before building on anything the PDF does not show, ask the user. If an
+  assumption or recommendation is ever added, label it as such and never
+  present it as a business fact.
 - Use the glossary's English terms in code and the API.
-- When the business answers an open question, update the documents and change
-  the label.
+- When the business answers an open question, update the documents and record
+  where the answer came from.
 
 ## Architecture
 
@@ -60,7 +63,7 @@ Modular monolith, deployed with Docker Compose. No frontend for now.
 ```
 compose.yaml            db, backend; "migrate" and "tests" profiles
 .env.example            template for .env
-morix-comp-1.pdf        business source diagram (Persian)
+morix-erp.pdf           business source diagram (Persian)
 docs/                   business requirements, workflows, domain model
 backend/
   Dockerfile            base -> runtime / test stages, non-root "app" user
