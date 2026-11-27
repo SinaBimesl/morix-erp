@@ -15,6 +15,34 @@ and README still say "MERP".
 - Work one approved step at a time. Run the relevant tests and report anything
   you could not verify.
 - Do not commit unless explicitly asked.
+- Before planning or building any business module, consult the business
+  documents in `docs/` (below).
+
+## Business documentation
+
+The business source is `morix-comp-1.pdf` (repo root): a one-page Persian
+Figma diagram of departments and their items. It has no processes or data
+fields. These documents extract it and expand it:
+
+- `docs/BUSINESS_REQUIREMENTS.md`: full transcription of the PDF, departments,
+  products and services, requirements with stable IDs (`BR-*`), missing
+  information, and ambiguous terms.
+- `docs/WORKFLOWS.md`: maintenance checklists from the PDF, plus assumed
+  repair, manufacturing, supply, and communication workflows.
+- `docs/DOMAIN_MODEL.md`: Persian-English glossary, the concepts the PDF
+  shows, the proposed entities, and suggested module boundaries.
+
+Rules:
+
+- Every statement is labelled **[PDF]**, **[Interpretation]**,
+  **[Assumption]**, or **[Recommendation]**. Only **[PDF]** is source fact.
+  Never present the others as business facts. Confirm them with the user before
+  building on them.
+- The proposed modules and entities are not approved. Approval rules above
+  still apply.
+- Use the glossary's English terms in code and the API.
+- When the business answers an open question, update the documents and change
+  the label.
 
 ## Architecture
 
@@ -32,6 +60,8 @@ Modular monolith, deployed with Docker Compose. No frontend for now.
 ```
 compose.yaml            db, backend; "migrate" and "tests" profiles
 .env.example            template for .env
+morix-comp-1.pdf        business source diagram (Persian)
+docs/                   business requirements, workflows, domain model
 backend/
   Dockerfile            base -> runtime / test stages, non-root "app" user
   alembic.ini
