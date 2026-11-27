@@ -2,7 +2,8 @@
 
 Source: `morix-erp.pdf` in the repository root. It is a single-page Figma
 diagram (10128 × 3836 pt, created 2026-11-27) with Persian labels, some English
-labels, and no other text.
+labels, and no other text. Clarifications from the business owner are recorded
+in §2.
 
 It replaces an earlier, incorrect source (`morix-comp-1.pdf`). Nothing in
 these documents is taken from that file.
@@ -16,12 +17,16 @@ glossary.
 | Label | Meaning |
 |---|---|
 | **[PDF]** | Shown in the PDF: a box label, or an arrow between boxes. Text is quoted verbatim. |
-| **[Interpretation]** | The minimum reading needed to use the diagram, such as "an empty box is a placeholder". It is not written in the PDF. |
+| **[Owner]** | Confirmed by the business owner. Each one has an ID (C1, C2, ...) listed in §2. |
+| **[Interpretation]** | The minimum reading needed to use the diagram, such as "an empty box is a placeholder". Neither the PDF nor the owner states it. |
 
-These documents contain no assumptions and no recommendations. Anything the
-PDF does not show is listed as an open question in §5. Translations from
-Persian are ours. Unclear labels keep their original text and are listed in
-§6.
+These documents contain no assumptions and no recommendations. Anything that
+neither the PDF nor the owner answers is an open question in §6. Translations
+from Persian are ours. Unclear labels keep their original text and are listed
+in §7.
+
+**Terminology.** "Bass Guitar" is the standard English term for both باس and
+بیس (C1). "Guitar Parts and Accessories" is one category (C2).
 
 ---
 
@@ -63,7 +68,7 @@ defined.
 تعمیر و سرویس  Repair and Service
 ├── گیتار  Guitar
 │   ├── الکتریک  Electric
-│   ├── باس  Bass
+│   ├── باس  Bass Guitar (C1)
 │   ├── کلاسیک  Classical
 │   └── آکوستیک  Acoustic
 ├── آمپلی فایر  Amplifier            (no children)
@@ -85,7 +90,10 @@ type. No service connects to Amplifier or Accessory equipment.
 | ری فرت | Refret | White |
 | ترمیم رنگ | Paint/finish repair | White |
 
-The diamond colours have no legend; their meaning is unknown (§6).
+The diamond colours have no legend; their meaning is unknown (§7).
+
+**[Owner]** C6: Classical and acoustic guitars are not manufactured, but they
+may be included in repair services.
 
 ### 1.2 Paint Department (بخش رنگ)
 
@@ -111,7 +119,7 @@ The diamond colours have no legend; their meaning is unknown (§6).
 │   ├── آماده سازی چوب  Wood preparation          (no children)
 │   ├── تهیه اقلام رنگ  Paint materials supply
 │   │   └── رنگ , کیلر , سیلر , هاردنر موشتابا دسین
-│   │       Paint, clear coat (کیلر), sealer, hardener, "موشتابا دسین" (§6)
+│   │       Paint, clear coat, sealer, hardener (C5), "موشتابا دسین" (§7)
 │   ├── ابزار پرداخت  Finishing tools
 │   │   ├── سنباده  Sandpaper
 │   │   └── پولیش و پد پولیش  Polish and polishing pads
@@ -124,6 +132,9 @@ The diamond colours have no legend; their meaning is unknown (§6).
 └── مدیریت  Management
     └── (empty box)
 ```
+
+**[Owner]** C5: Clear coat (کیلر), hardener (هاردنر), and sealer (سیلر) are
+materials used in the painting and finishing process.
 
 **[PDF]** A blue curved arrow runs from "ابزار پاشش" (Spraying tools, under
 Resource supply) to "پیستوله" (Spray gun, under Equipment maintenance). It is
@@ -151,6 +162,9 @@ the same equipment.
     └── بله  Bale
 ```
 
+**[Owner]** C7: Customers do not access MorixERP. None of these channels is a
+way for customers to use the system.
+
 ### 1.4 Production (تولید)
 
 **[PDF]** String counts, "passive", "active", and "RG10" are written in
@@ -158,28 +172,31 @@ English in the PDF.
 
 ```
 تولید  Production
-├── قطعات گیتار / لوازم جانبی  Guitar parts / Accessories   (one box, two lines; no children)
+├── قطعات گیتار / لوازم جانبی  Guitar Parts and Accessories (C2)   (no children)
 ├── گیتار  Guitar
 │   ├── الکتریک  Electric
 │   │   ├── 6 string
 │   │   ├── 7 string
 │   │   └── 8 string
-│   └── بیس  Bass
+│   └── بیس  Bass Guitar (C1)
 │       ├── 4 string
 │       ├── 5 string
 │       └── 6 string
 ├── آمپلی فایر  Amplifier
-│   └── RG10
+│   └── RG10  amplifier model (C4)
 └── پری آمپ گیتار  Guitar preamp
-    ├── گیتار بیس  Bass guitar
+    ├── گیتار بیس  Bass Guitar (C1)
     │   └── passive
-    │       └── بارتولینی  Bartolini
-    └── گیتار الکتریک  Electric guitar
+    │       └── بارتولینی  Bartolini, a preamp type (C3)
+    └── گیتار الکتریک  Electric Guitar
         └── active
 ```
 
-**[PDF]** Production shows electric and bass guitars only. Classical and
-acoustic, which appear under Repair, do not appear under Production.
+**[Owner]** C6: Production is limited to electric guitars and bass guitars.
+Classical and acoustic guitars are not manufactured by this workshop.
+
+The PDF's Production tree also contains Amplifier, Guitar preamp, and Guitar
+Parts and Accessories. How these relate to C6 is open (§6, question 1).
 
 ### 1.5 Warranty (گارانتی)
 
@@ -187,7 +204,7 @@ acoustic, which appear under Repair, do not appear under Production.
 
 ```
 گارانتی  Warranty
-├── قطعات گیتار / لوازم جانبی  Guitar parts / Accessories
+├── قطعات گیتار / لوازم جانبی  Guitar Parts and Accessories (C2)
 ├── گیتار  Guitar
 ├── آمپلی فایر  Amplifier
 └── پری آمپ گیتار  Guitar preamp
@@ -198,7 +215,24 @@ Production. No warranty terms, durations, or conditions are given.
 
 ---
 
-## 2. Departments and areas
+## 2. Owner-confirmed clarifications
+
+Confirmed by the business owner on 2026-11-27. They answer questions the PDF
+left open; they do not change what the PDF shows.
+
+| ID | Clarification | Applies to |
+|---|---|---|
+| C1 | "باس" and "بیس" refer to the same instrument: the bass guitar. The standard term is **Bass Guitar**. | §1.1, §1.4 |
+| C2 | Guitar parts and accessories (قطعات گیتار / لوازم جانبی) are **one combined category**, not two. | §1.4, §1.5 |
+| C3 | Bartolini (بارتولینی) refers to a specific **type of preamp** in this context. It is not classified as a brand or model. | §1.4 |
+| C4 | RG10 is an **amplifier model**. | §1.4 |
+| C5 | Clear coat (کیلر), hardener (هاردنر), and sealer (سیلر) are **materials used in the painting and finishing process**. | §1.2 |
+| C6 | Production is limited to **electric guitars and bass guitars**. Classical and acoustic guitars are not manufactured by this workshop. They may still be included in repair services. | §1.1, §1.4 |
+| C7 | MorixERP is an **internal workshop management system used by workshop managers**. Customers do not access it. Customer-facing portals, public interfaces, and customer accounts are not requirements. | Whole system |
+
+---
+
+## 3. Departments and areas
 
 | Area | What the PDF defines |
 |---|---|
@@ -219,85 +253,96 @@ sub-unit of the Paint Department.
 
 ---
 
-## 3. Products and services
+## 4. Products and services
 
 | Item | Source |
 |---|---|
-| Produced guitars: electric (6, 7, 8 string), bass (6, 4, 5 string) | **[PDF]** §1.4 |
-| Produced amplifier: RG10 | **[PDF]** §1.4 |
-| Produced guitar preamps: for bass guitar (passive, Bartolini), for electric guitar (active) | **[PDF]** §1.4 |
-| Produced guitar parts / accessories (no items listed) | **[PDF]** §1.4 |
-| Warranty on guitar parts/accessories, guitars, amplifiers, guitar preamps | **[PDF]** §1.5 |
-| Repair and service of guitars (electric, bass, classical, acoustic), amplifiers, and effects units | **[PDF]** §1.1 |
+| Manufactured guitars: electric (6, 7, 8 string) and Bass Guitar (4, 5, 6 string) only | **[PDF]** §1.4; **[Owner]** C1, C6 |
+| Classical and acoustic guitars: not manufactured | **[Owner]** C6 |
+| Amplifier model RG10, under Production | **[PDF]** §1.4; **[Owner]** C4 |
+| Guitar preamps under Production: for Bass Guitar (passive, Bartolini preamp type), for electric guitar (active) | **[PDF]** §1.4; **[Owner]** C1, C3 |
+| Guitar Parts and Accessories, one category under Production (no items listed) | **[PDF]** §1.4; **[Owner]** C2 |
+| Warranty on Guitar Parts and Accessories, guitars, amplifiers, guitar preamps | **[PDF]** §1.5; **[Owner]** C2 |
+| Repair and service of guitars (electric, Bass Guitar, classical, acoustic), amplifiers, and effects units | **[PDF]** §1.1; **[Owner]** C1, C6 |
 | Guitar services: instrument upgrade, general setup, fret levelling, electronics repair and upgrade, refret, paint/finish repair | **[PDF]** §1.1 |
+| Painting and finishing materials: paint, clear coat, sealer, hardener | **[PDF]** §1.2; **[Owner]** C5 |
 
 ---
 
-## 4. Scope requirements
+## 5. Scope requirements
 
-**[Interpretation]** Each requirement says only that the system must be able
-to represent what the PDF lists. Behaviour beyond that is not specified by the
-PDF; see §5. IDs are stable; refer to them in issues and commits.
+**[Interpretation]** Each BR requirement says only that the system must be
+able to represent what the PDF lists. **[Owner]** requirements come directly
+from §2. Behaviour beyond this is not specified; see §6. IDs are stable; refer
+to them in issues and commits.
 
 | ID | Requirement | Source |
 |---|---|---|
+| BR-SYS-1 | MorixERP is an internal system used by workshop managers. There are no customer-facing portals, public interfaces, or customer accounts. | **[Owner]** C7 |
 | BR-ORG-1 | Represent the eleven areas in §1, and the Paint sub-units: Equipment maintenance, Resource supply, Management. | §1, §1.2 |
-| BR-REP-1 | Represent repairable items: Guitar (Electric, Bass, Classical, Acoustic), Amplifier, Accessory equipment (Effects and units). | §1.1 |
+| BR-REP-1 | Represent repairable items: Guitar (Electric, Bass Guitar, Classical, Acoustic), Amplifier, Accessory equipment (Effects and units). | §1.1; C1, C6 |
 | BR-REP-2 | Represent the six guitar services, each applicable to all four guitar types. | §1.1 |
 | BR-PNT-1 | Represent paint equipment (compressor, spray gun, ventilation system) and the maintenance tasks listed for each, including sub-tasks. | §1.2 |
-| BR-PNT-2 | Represent paint supply categories and their items, as listed. | §1.2 |
+| BR-PNT-2 | Represent paint supply categories and their items, as listed. Clear coat, sealer, and hardener are painting and finishing materials. | §1.2; C5 |
 | BR-PNT-3 | The spray gun as a supplied item and as maintained equipment refers to the same thing. | §1.2 arrow |
-| BR-CUS-1 | Represent contact channels: third party; in person; phone (call, SMS); online (website, Telegram, Instagram, Rubika, Bale). | §1.3 |
-| BR-PRD-1 | Represent product categories: guitar parts/accessories, guitar, amplifier, guitar preamp. | §1.4 |
-| BR-PRD-2 | Represent guitar variants by type and string count: electric 6/7/8, bass 4/5/6. | §1.4 |
-| BR-PRD-3 | Represent amplifier model RG10 and preamp variants (bass: passive, Bartolini; electric: active). | §1.4 |
-| BR-WAR-1 | Represent warranty coverage for the four product categories. | §1.5 |
+| BR-CUS-1 | Represent contact channels: third party; in person; phone (call, SMS); online (website, Telegram, Instagram, Rubika, Bale). These are not ways for customers to access the system. | §1.3; C7 |
+| BR-PRD-1 | Represent the Production categories: Guitar Parts and Accessories (one category), Guitar, Amplifier, Guitar preamp. | §1.4; C2 |
+| BR-PRD-2 | Manufactured guitars are electric (6/7/8 string) and Bass Guitar (4/5/6 string) only. | §1.4; C1, C6 |
+| BR-PRD-3 | Represent amplifier model RG10 and the preamp variants: Bass Guitar passive with the Bartolini preamp type; electric guitar active. | §1.4; C3, C4 |
+| BR-WAR-1 | Represent warranty coverage for the four categories in §1.5. | §1.5; C2 |
 
 Note: the existing User Manager already supports a department tree
 (`parent_id`) and teams (`CLAUDE.md`). BR-ORG-1 can be met with data.
 
 ---
 
-## 5. Open questions
+## 6. Open questions
 
-The PDF does not answer these:
+Neither the PDF nor the owner has answered these:
 
-1. **Production process.** How do Carpentry, CNC, and Paint relate to
+1. **Production scope vs C6.** C6 limits production to electric and bass
+   guitars. The PDF's Production tree also lists an amplifier (RG10), guitar
+   preamps, and Guitar Parts and Accessories. Are these manufactured too, or
+   listed under Production for another reason?
+2. **Production process.** How do Carpentry, CNC, and Paint relate to
    Production? Which steps, in which order? Built to order, to stock, or both?
-2. **Production catalogue.** What items are under "Guitar parts /
-   Accessories"? Is RG10 the only amplifier? Are there other guitar models?
-3. **Preamps.** Is it correct that the bass preamp is passive and the
-   electric one active? What does "Bartolini" refer to: a brand of part, a
-   model, a supplier?
-4. **Warranty.** Terms, durations, what is covered, and who handles claims.
-   Does it cover only products the business produced, or sold, or also
+3. **Production catalogue.** What items are in Guitar Parts and Accessories?
+   Are there amplifier models besides RG10?
+4. **Preamps.** Is it correct that Bass Guitar preamps are passive and
+   electric-guitar preamps active, as drawn? Are there preamp types besides
+   Bartolini?
+5. **System users.** C7 names workshop managers as the users. Do any other
+   staff (technicians, accounting, sales) log in? The existing User Manager
+   allows staff accounts without an email address.
+6. **Warranty.** Terms, durations, what is covered, and who handles claims.
+   Does it cover only products the workshop produced, or sold, or also
    repairs?
-5. **Repair process.** Intake, diagnosis, quote, approval, work, handover.
+7. **Repair process.** Intake, diagnosis, quote, approval, work, handover.
    Pricing for the six services.
-6. **Services for non-guitar items.** The services connect only to guitars.
+8. **Services for non-guitar items.** The services connect only to guitars.
    What services exist for amplifiers and effects units?
-7. **Placeholder areas.** What do Management, Accounting, Sales, CNC,
+9. **Placeholder areas.** What do Management, Accounting, Sales, CNC,
    Purchasing, Carpentry, and Paint Management do?
-8. **Purchasing vs Resource supply.** Does the Paint Department buy its own
-   supplies, or request them from Purchasing?
-9. **Maintenance.** Intervals per task; whether results are recorded today.
-10. **Third party channel.** Who is the third party: a reseller, an agent, a
+10. **Purchasing vs Resource supply.** Does the Paint Department buy its own
+    supplies, or request them from Purchasing?
+11. **Maintenance.** Intervals per task; whether results are recorded today.
+12. **Third party channel.** Who is the third party: a reseller, an agent, a
     courier?
-11. **Inventory.** Is there a warehouse? Which items are stocked?
-12. **Money.** Currency, tax rules, invoicing, and accounting software.
+13. **Inventory.** Is there a warehouse? Which items are stocked?
+14. **Money.** Currency, tax rules, invoicing, and accounting software.
 
-## 6. Ambiguities in the source
+## 7. Ambiguities in the source
+
+Still unresolved:
 
 | Text in PDF | Location | Issue |
 |---|---|---|
-| هاردنر موشتابا دسین | Paint → Paint materials supply | "Hardener" is clear. "موشتابا دسین" is not a recognised term: possibly a product or brand name, or a typo. |
-| کیلر | Paint → Paint materials supply | Read as clear coat/lacquer. Confirm. |
-| قطعات گیتار / لوازم جانبی | Production, Warranty | One box with two lines: one category, or two ("guitar parts" and "accessories")? |
-| باس / بیس | Repair uses باس, Production uses بیس | Both mean "bass". Assumed to be the same type; confirm. |
-| passive → بارتولینی | Production → Guitar preamp → Bass guitar | Bartolini sits below "passive" as a child. Whether it is a brand, model, or option is not shown. |
-| RG10 | Production → Amplifier | Model name or code; not explained. |
+| موشتابا دسین | Paint → Paint materials supply, after "هاردنر" | Not a recognised term: possibly a product or brand name, or a typo. C5 confirms hardener but not this text. |
 | Diamond colours | Repair services | Pink, green, teal, and white. No legend. |
 | Arrow colours | Production (red vs grey), Repair connectors | Probably styling only; no legend. |
 | Empty boxes | Paint → Management; six top-level areas | Read as placeholders. |
 | "Management" twice | Top level, and under Paint | Unclear whether they are related. |
 | No links between areas | Whole page | No reporting lines or hand-offs are drawn, for example Production ↔ Carpentry/CNC/Paint, or Warranty ↔ Repair. |
+
+Resolved by the owner (§2): باس / بیس (C1); قطعات گیتار / لوازم جانبی (C2);
+بارتولینی (C3); RG10 (C4); کیلر, سیلر, هاردنر (C5).

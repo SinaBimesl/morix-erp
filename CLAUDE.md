@@ -4,6 +4,9 @@ Backend-first workshop management system for a guitar business: manufacturing,
 sales, repairs, and related departments. The API title is "MorixERP"; the repo
 and README still say "MERP".
 
+It is an internal system used by workshop managers. Customers do not access
+it (owner-confirmed, C7 in `docs/BUSINESS_REQUIREMENTS.md`).
+
 ## Working rules
 
 - Read this file before planning or changing architecture.
@@ -12,6 +15,8 @@ and README still say "MERP".
 - Do not modify `README.md` unless asked, or unless a command or workflow it
   documents becomes incorrect.
 - Do not build frontend or new business modules without explicit approval.
+- Do not introduce customer-facing portals, public interfaces, or customer
+  accounts as requirements. The system is internal (C7).
 - Work one approved step at a time. Run the relevant tests and report anything
   you could not verify.
 - Do not commit unless explicitly asked.
@@ -25,11 +30,12 @@ mostly in Persian, of the business areas and their items. It has no processes
 or data fields. It replaces `morix-comp-1.pdf`, which was the wrong file;
 do not use that file or anything derived from it.
 
-These documents transcribe the PDF:
+These documents transcribe the PDF and record the business owner's
+clarifications (C1–C7):
 
-- `docs/BUSINESS_REQUIREMENTS.md`: full transcription, areas, products and
-  services, scope requirements with stable IDs (`BR-*`), open questions, and
-  ambiguous terms.
+- `docs/BUSINESS_REQUIREMENTS.md`: full transcription, owner-confirmed
+  clarifications (§2), areas, products and services, scope requirements with
+  stable IDs (`BR-*`), open questions, and ambiguous terms.
 - `docs/WORKFLOWS.md`: the process elements the PDF shows, such as maintenance
   tasks, repair services, and warranty coverage, with questions per area. No
   workflows are assumed.
@@ -38,14 +44,29 @@ These documents transcribe the PDF:
 
 Rules:
 
-- Statements are labelled **[PDF]** (source fact) or **[Interpretation]**
-  (minimum reading of the diagram). The documents hold no assumptions.
-- Before building on anything the PDF does not show, ask the user. If an
-  assumption or recommendation is ever added, label it as such and never
-  present it as a business fact.
+Confirmed scope (owner, 2026-11-27):
+
+- Users are workshop managers. No customer access, portals, public
+  interfaces, or customer accounts (C7). Whether other staff log in is still
+  open.
+- Production is limited to electric guitars and bass guitars. Classical and
+  acoustic guitars are not manufactured, but may be repaired (C6).
+- Terminology: "Bass Guitar" for both باس and بیس (C1); "Guitar Parts and
+  Accessories" is one category (C2); Bartolini is a preamp type (C3); RG10 is
+  an amplifier model (C4).
+
+Rules:
+
+- Statements are labelled **[PDF]** (source fact), **[Owner]** (confirmed by
+  the business owner, with a C-ID), or **[Interpretation]** (minimum reading
+  of the diagram). The documents hold no assumptions.
+- Before building on anything neither the PDF nor the owner confirms, ask the
+  user. If an assumption or recommendation is ever added, label it as such
+  and never present it as a business fact.
 - Use the glossary's English terms in code and the API.
-- When the business answers an open question, update the documents and record
-  where the answer came from.
+- When the business answers an open question, add it to §2 of
+  `docs/BUSINESS_REQUIREMENTS.md` with the next C-ID and the date, update
+  every affected document, and remove the question.
 
 ## Architecture
 
